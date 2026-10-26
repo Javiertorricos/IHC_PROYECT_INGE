@@ -18,7 +18,7 @@ function App() {
       <div className='min-h-screen bg-gray-100'>
         <Header />
         <main className='max-w-4xl mx-auto px-6 py-8'>
-          <h2>Formualrio de tareas</h2>
+          <h2>Formulario de tareas</h2>
           <div>
             <ActivityForm />
           </div>
