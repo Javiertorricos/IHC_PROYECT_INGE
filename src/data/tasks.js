@@ -5,7 +5,7 @@
       docente: "Bryana Ojopi",
       tarea: "Realizar la correccion de la validacion de los estados del task",
       fecha: "02/10/2026",
-      estado: "Finalizado"
+      estado: "Completado"
     },
     {
       id: 2,

@@ -36,7 +36,7 @@ function TaskCard({
       return 'bg-blue-100 text-blue-800'
     }
 
-    if (estadoActual === 'En pausa') {
+    if (estadoActual === 'Inactivo') {
       return 'bg-gray-100 text-gray-800'
     }
 
@@ -73,7 +73,7 @@ function TaskCard({
           onClick={iniciarActividad}
           className="mt-5 bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition"
         >
-          Iniciar actividad
+          Realizar actividad
         </button>
       )}
 
@@ -86,16 +86,16 @@ function TaskCard({
         </button>
       )}
       
-      {estadoActual === 'En pausa' && (
+      {estadoActual === 'Inactivo' && (
         <button
-          onClick={completarActividad}
+          onClick={iniciarActividad}
           className="mt-5 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition"
         >
-          Completar actividad
+          Iniciar actividad
         </button>
       )}
 
-      {estadoActual === 'Completada' && (
+      {estadoActual === 'Completado' && (
         <div className="mt-5">
 
           <p className="text-green-700 font-medium mb-3">
