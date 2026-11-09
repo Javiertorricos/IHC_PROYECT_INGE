@@ -1,66 +1,129 @@
-import { useState } from "react"
+import { useEffect, useState } from 'react'
 
 function ActivityForm({
-  onAddTask
+  onAddTask,
+  onUpdateTask,
+  editingTask,
+  onCancelEdit
 }) {
-  const [form, setForm] = useState({
+
+  const initialForm = {
     nombre_materia: '',
     docente: '',
     tarea: '',
     fecha: '',
     estado: 'Inactivo'
-  })
+  }
+
+  const [form, setForm] = useState(initialForm)
 
   const [error, setError] = useState('')
 
+  // =========================
+  // CARGAR TAREA AL EDITAR
+  // =========================
+  useEffect(() => {
+
+    if (editingTask) {
+
+      setForm({
+        id: editingTask.id,
+        nombre_materia: editingTask.nombre_materia,
+        docente: editingTask.docente,
+        tarea: editingTask.tarea,
+        fecha: editingTask.fecha,
+        estado: editingTask.estado
+      })
+
+    } else {
+
+      setForm(initialForm)
+    }
+
+  }, [editingTask])
+
+  // =========================
+  // CAMBIAR CAMPOS
+  // =========================
   function changeForm(event) {
-    const { id, value } = event.target
+
+    const { name, value } = event.target
 
     setForm({
       ...form,
-      [id]: value
+      [name]: value
     })
   }
 
-  //VALIDACIONES
-  //AGREGAR LA VALIDACION EN LOS ESTADOS PARA QUE COINCIDAN CON LO QUE SE TIENE GUARDADO ANTERIORMENTE
-  //AGREGAR EL FORMATEO DE FECHAS
-  //AGREGAR LA VALIDACION DE QUE SE ESCRIBAN MAS DE 10 CARACTERES EN EL CAMPO DESCRIPCION (sin contar los espacios)
+  // =========================
+  // ENVIAR FORMULARIO
+  // =========================
+  function handleSubmit(event) {
 
-  function preventSubmit(event) {
     event.preventDefault()
-    
+
     if (
       form.nombre_materia.trim() === '' ||
       form.docente.trim() === '' ||
       form.tarea.trim() === '' ||
       form.fecha === ''
     ) {
-      setError('Complete todos los campos obligatorios.')
+
+      setError(
+        'Complete todos los campos obligatorios.'
+      )
+
       return
     }
-    
-    const newTask = {
-      id: Date.now(),
-      ...form
-    }
-
-    onAddTask(newTask)
 
     setError('')
 
-    setForm({
-      nombre_materia: '',
-      docente: '',
-      tarea: '',
-      fecha: '',
-      estado: 'Inactivo'
-    })
+    // =========================
+    // MODO EDICIÓN
+    // =========================
+    if (editingTask) {
+
+      onUpdateTask(form)
+
+    } else {
+
+      // =========================
+      // MODO CREACIÓN
+      // =========================
+      const newTask = {
+        id: Date.now(),
+        ...form
+      }
+
+      onAddTask(newTask)
+    }
+
+    setForm(initialForm)
+  }
+
+  // =========================
+  // CANCELAR EDICIÓN
+  // =========================
+  function handleCancel() {
+
+    setForm(initialForm)
+
+    setError('')
+
+    onCancelEdit()
   }
 
   return (
     <section className="bg-white border border-gray-200 rounded-xl p-6 mb-8">
-      <h2 className="text-xl font-bold text-gray-900 mb-5">Nueva tarea</h2>
+
+      <h2 className="text-xl font-bold text-gray-900 mb-5">
+
+        {editingTask
+          ? 'Editar tarea'
+          : 'Nueva tarea'}
+
+      </h2>
+
       {error && (
         <div
           role="alert"
@@ -69,51 +132,170 @@ function ActivityForm({
           {error}
         </div>
       )}
-      <form className="grid gap-4 md:grid-cols-2" onSubmit={preventSubmit}>
+
+      <form
+        className="grid gap-4 md:grid-cols-2"
+        onSubmit={handleSubmit}
+      >
+
+        {/* MATERIA */}
+
         <div>
-          <label htmlFor="nombre_materia" className="block text-sm font-medium text-gray-700 mb-2">Nombre materia</label>
-          <input id="nombre_materia" type="text" value={form.nombre_materia}
+
+          <label
+            htmlFor="materia"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Nombre materia
+          </label>
+
+          <input
+            id="materia"
+            name="nombre_materia"
+            type="text"
+            value={form.nombre_materia}
             onChange={changeForm}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg" />
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
         </div>
+
+        {/* DOCENTE */}
+
         <div>
-          <label htmlFor="docente" className="block text-sm font-medium text-gray-700 mb-2">Nombre docente</label>
-          <input id="docente" type="text" value={form.docente}
+
+          <label
+            htmlFor="docente"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Nombre docente
+          </label>
+
+          <input
+            id="docente"
+            name="docente"
+            type="text"
+            value={form.docente}
             onChange={changeForm}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg" />
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
         </div>
+
+        {/* TAREA */}
+
         <div>
-          <label htmlFor="tarea" className="block text-sm font-medium text-gray-700 mb-2">Descripcion de la tarea</label>
-          <input id="tarea" type="text" value={form.tarea}
+
+          <label
+            htmlFor="tarea"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Descripción de la tarea
+          </label>
+
+          <input
+            id="tarea"
+            name="tarea"
+            type="text"
+            value={form.tarea}
             onChange={changeForm}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg" />
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
         </div>
+
+        {/* FECHA */}
+
         <div>
-          <label htmlFor="fecha" className="block text-sm font-medium text-gray-700 mb-2">Fecha</label>
-          <input id="fecha" type="date" value={form.fecha}
+
+          <label
+            htmlFor="fecha"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Fecha
+          </label>
+
+          <input
+            id="fecha"
+            name="fecha"
+            type="date"
+            value={form.fecha}
             onChange={changeForm}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg" />
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
         </div>
+
+        {/* ESTADO */}
+
         <div>
-          <label htmlFor="estado" className="block text-sm font-medium text-gray-700 mb-2">Estado</label>
-          <select id="estado" className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white" onChange={changeForm} value={form.estado} >
-            <option value="Inactivo">Inactivo</option>
-            <option value="Pendiente">Pendiente</option>
-            <option value="En proceso">En proceso</option>
-            <option value="Completado">Completado</option>
+
+          <label
+            htmlFor="estado"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Estado
+          </label>
+
+          <select
+            id="estado"
+            name="estado"
+            value={form.estado}
+            onChange={changeForm}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+
+            <option value="Inactivo">
+              Inactivo
+            </option>
+
+            <option value="Pendiente">
+              Pendiente
+            </option>
+
+            <option value="En proceso">
+              En proceso
+            </option>
+
+            <option value="Completado">
+              Completado
+            </option>
+
           </select>
+
         </div>
-          <div className="md:col-span-2">
+
+        {/* BOTONES */}
+
+        <div className="md:col-span-2 flex gap-3">
+
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-5 py-3 rounded-lg hover:bg-blue-700 transition"
+          >
+
+            {editingTask
+              ? 'Actualizar tarea'
+              : 'Guardar actividad'}
+
+          </button>
+
+          {editingTask && (
 
             <button
-              type="submit"
-              className="bg-blue-600 text-white px-5 py-3 rounded-lg hover:bg-blue-700 transition"
+              type="button"
+              onClick={handleCancel}
+              className="border border-gray-300 text-gray-700 px-5 py-3 rounded-lg hover:bg-gray-100 transition"
             >
-              Guardar actividad
+              Cancelar
             </button>
 
-          </div>
+          )}
+
+        </div>
+
       </form>
+
     </section>
   )
 }

@@ -1,116 +1,110 @@
-import { useState } from 'react'
-
 function TaskCard({
+  id,
   nombre_materia,
   docente,
+  tarea,
   fecha,
-  estado
+  estado,
+  onEdit,
+  onDelete
 }) {
 
-  const [estadoActual, setEstadoActual] = useState(estado)
+  function handleDelete() {
 
-  function iniciarActividad() {
-    setEstadoActual('En progreso')
+    const confirmed = window.confirm(
+      `¿Deseas eliminar la tarea "${tarea}"?`
+    )
+
+    if (confirmed) {
+      onDelete(id)
+    }
   }
 
-  function completarActividad() {
-    setEstadoActual('Completado')
-  }
+  function getStatusClass() {
 
-  function pausarActividad() {
-    setEstadoActual('En pausa')
-  }
-
-  function reabrirActividad() {
-    setEstadoActual('Pendiente')
-  }
-
-  function obtenerClaseEstado() {
-    //PENDIENTE, EN PROGRESO, EN PAUSA, COMPLETADO
-
-    if (estadoActual === 'Pendiente') {
+    if (estado === 'Pendiente') {
       return 'bg-yellow-100 text-yellow-800'
     }
 
-    if (estadoActual === 'En progreso') {
+    if (estado === 'En proceso') {
       return 'bg-blue-100 text-blue-800'
     }
 
-    if (estadoActual === 'Inactivo') {
-      return 'bg-gray-100 text-gray-800'
+    if (estado === 'Completado') {
+      return 'bg-green-100 text-green-800'
     }
 
-    return 'bg-green-100 text-green-800'
+    return 'bg-gray-100 text-gray-700'
   }
 
   return (
-    <article className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <article className="bg-white border border-gray-200 rounded-xl shadow-sm p-6">
 
-      <div className="flex justify-between items-start gap-4">
+      <div className="flex justify-between items-start gap-4 mb-4">
 
         <div>
 
           <h3 className="text-xl font-bold text-gray-900">
-            {nombre_materia} - {docente}
+            {tarea}
           </h3>
+
+          <p className="text-gray-500 mt-1">
+            {nombre_materia}
+          </p>
 
         </div>
 
         <span
-          className={`px-3 py-1 rounded-full text-sm font-medium ${obtenerClaseEstado()}`}
+          className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusClass()}`}
         >
-          {estadoActual}
+          {estado}
         </span>
 
       </div>
 
-      <p className="text-gray-500 mt-4">
-        Fecha de entrega: {fecha}
-      </p>
+      <div className="space-y-2 text-gray-600">
 
-      {estadoActual === 'Pendiente' && (
+        <p>
+          <span className="font-medium text-gray-700">
+            Docente:
+          </span>
+
+          {' '}
+
+          {docente}
+        </p>
+
+        <p>
+          <span className="font-medium text-gray-700">
+            Fecha:
+          </span>
+
+          {' '}
+
+          {fecha}
+        </p>
+
+      </div>
+
+      <div className="flex gap-3 mt-6">
+
         <button
-          onClick={iniciarActividad}
-          className="mt-5 bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition"
+          type="button"
+          onClick={onEdit}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
         >
-          Realizar actividad
+          Editar
         </button>
-      )}
 
-      {estadoActual === 'En progreso' && (
         <button
-          onClick={completarActividad}
-          className="mt-5 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+          type="button"
+          onClick={handleDelete}
+          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
         >
-          Completar actividad
+          Eliminar
         </button>
-      )}
-      
-      {estadoActual === 'Inactivo' && (
-        <button
-          onClick={iniciarActividad}
-          className="mt-5 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition"
-        >
-          Iniciar actividad
-        </button>
-      )}
 
-      {estadoActual === 'Completado' && (
-        <div className="mt-5">
-
-          <p className="text-green-700 font-medium mb-3">
-            ✓ Actividad completada correctamente
-          </p>
-
-          <button
-            onClick={reabrirActividad}
-            className="border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100 transition"
-          >
-            Reabrir actividad
-          </button>
-
-        </div>
-      )}
+      </div>
 
     </article>
   )
