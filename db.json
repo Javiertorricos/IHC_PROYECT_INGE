@@ -1,0 +1,45 @@
+{
+  "tasks": [
+    {
+      "id": "1",
+      "nombre_materia": "IHC",
+      "docente": "Bryana Ojopi",
+      "tarea": "Realizar la corrección de la validación de los estados del task",
+      "fecha": "2026-10-02",
+      "estado": "Completado"
+    },
+    {
+      "id": "2",
+      "nombre_materia": "Cálculo II",
+      "docente": "Juan Pérez",
+      "tarea": "Realizar el práctico utilizando geogebra",
+      "fecha": "2026-10-15",
+      "estado": "En proceso"
+    },
+    {
+      "id": "3",
+      "nombre_materia": "Programación Orientada a Objetos",
+      "docente": "María García",
+      "tarea": "Crear una función de búsqueda binaria",
+      "fecha": "2026-10-20",
+      "estado": "Pendiente"
+    },
+    {
+      "id": "4",
+      "nombre_materia": "Interacción Humano Computador",
+      "docente": "Bryana Ojopi",
+      "tarea": "Realizar el avance de proyecto",
+      "fecha": "2026-10-20",
+      "estado": "En proceso"
+    },
+    {
+      "id": "5",
+      "nombre_materia": "Aplicaciones Móviles",
+      "docente": "Juan Pablo Villazon",
+      "tarea": "Corregir las funcionalidades de la app realizada en clases",
+      "fecha": "2026-10-20",
+      "estado": "En proceso"
+    }
+  ]
+}
+

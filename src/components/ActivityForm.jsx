@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react'
 
+const initialForm = {
+  nombre_materia: '',
+  docente: '',
+  tarea: '',
+  fecha: '',
+  estado: 'Inactivo'
+}
+
 function ActivityForm({
   onAddTask,
   onUpdateTask,
   editingTask,
   onCancelEdit
 }) {
-
-  const initialForm = {
-    nombre_materia: '',
-    docente: '',
-    tarea: '',
-    fecha: '',
-    estado: 'Inactivo'
-  }
 
   const [form, setForm] = useState(initialForm)
 
@@ -25,13 +25,22 @@ function ActivityForm({
   useEffect(() => {
 
     if (editingTask) {
+      let formattedDate = editingTask.fecha || ''
+      if (formattedDate.includes('/')) {
+        const parts = formattedDate.split('/')
+        if (parts.length === 3) {
+          // Si viene en formato DD/MM/YYYY, convertir a YYYY-MM-DD para el input type="date"
+          formattedDate = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`
+        }
+      }
 
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setForm({
         id: editingTask.id,
         nombre_materia: editingTask.nombre_materia,
         docente: editingTask.docente,
         tarea: editingTask.tarea,
-        fecha: editingTask.fecha,
+        fecha: formattedDate,
         estado: editingTask.estado
       })
 
@@ -91,7 +100,7 @@ function ActivityForm({
       // MODO CREACIÓN
       // =========================
       const newTask = {
-        id: Date.now(),
+        id: String(Date.now()),
         ...form
       }
 
